@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promptophyte — Handbook</title>
+<meta name="description" content="The Promptophyte handbook — a ground-up guide to building software with an AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<style>
+  :root{
+    --paper:      #F1EEE2;
+    --paper-deep: #E7E1CC;
+    --ink:        #1E231A;
+    --ink-soft:   #4B5044;
+    --rule:       #C9C2A2;
+    --gold:       #B97F22;
+    --gold-deep:  #93641A;
+    --leaf:       #3F6B44;
+    --leaf-deep:  #2E4F33;
+
+    --clay-neutral: #EEE8D3;
+    --clay-gold:    #E7B968;
+    --hl-neutral: rgba(255,253,246,.85);  --sh-neutral: rgba(30,35,26,.14);
+    --hl-gold:    rgba(255,244,218,.85);  --sh-gold:    rgba(147,100,26,.30);
+
+    --max: 720px;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: var(--gold-deep); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover{ color: var(--gold); }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--leaf); outline-offset: 3px; }
+
+  .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    padding: 30px 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .mark{ display: inline-flex; align-items: center; gap: 9px; text-decoration: none; }
+  .mark:hover{ color: var(--ink); }
+  .mark svg{ width: 21px; height: 21px; transition: transform .5s var(--ease); }
+  .mark:hover svg{ transform: rotate(-8deg) scale(1.12); }
+  .mark span{ font-family: 'Newsreader', Georgia, serif; font-size: 18px; font-weight: 500; color: var(--ink); }
+
+  .tabs{ display: flex; gap: 10px; }
+  .tab{
+    font: inherit; font-size: 14.5px; font-weight: 600;
+    padding: 10px 16px; border-radius: 16px; border: none;
+    cursor: pointer; background: var(--clay-neutral); color: var(--ink-soft);
+    box-shadow: -5px -5px 11px var(--hl-neutral), 6px 6px 14px var(--sh-neutral);
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s;
+  }
+  .tab:hover{ transform: translateY(-2px); }
+  .tab.active{
+    background: var(--clay-gold); color: var(--ink);
+    box-shadow: -5px -5px 11px var(--hl-gold), 6px 6px 14px var(--sh-gold);
+  }
+  @media (prefers-reduced-motion: reduce){ .tab, .tab:hover{ transform: none; transition: none; } }
+
+  /* ---------- Document body ---------- */
+  .doc{ padding: 8px 0 70px; }
+  .doc.loading{ opacity: .5; }
+
+  .doc h1{
+    font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+    font-size: clamp(30px, 4.6vw, 42px); line-height: 1.15;
+    letter-spacing: -0.01em; margin: 6px 0 6px;
+  }
+  .doc h2{
+    font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+    font-size: 25px; color: var(--leaf-deep);
+    margin: 42px 0 12px; padding-top: 20px; border-top: 1px solid var(--rule);
+  }
+  .doc h3{
+    font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+    font-size: 20px; margin: 28px 0 8px;
+  }
+  .doc > h1:first-child + p{
+    font-size: 19px; color: var(--ink-soft); margin-top: 0;
+  }
+  .doc p{ margin: 0 0 15px; }
+  .doc ul, .doc ol{ margin: 0 0 15px; padding-left: 26px; }
+  .doc li{ margin-bottom: 6px; }
+  .doc li > ul, .doc li > ol{ margin-top: 6px; margin-bottom: 0; }
+  .doc hr{ border: none; border-top: 1px solid var(--rule); margin: 8px 0; }
+  .doc strong{ color: var(--ink); }
+  .doc em{ color: var(--ink-soft); }
+
+  .doc code{
+    font-family: 'IBM Plex Mono', monospace; font-size: 14.5px;
+    background: var(--clay-neutral); padding: 2px 6px; border-radius: 5px;
+  }
+  .doc pre{
+    background: var(--clay-neutral);
+    border-radius: 16px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    box-shadow: inset 0 0 0 1px var(--rule);
+    margin: 0 0 18px;
+  }
+  .doc pre code{ background: none; padding: 0; font-size: 14px; line-height: 1.6; }
+
+  .doc blockquote{
+    margin: 20px 0;
+    padding: 18px 22px;
+    background: var(--clay-gold);
+    border-radius: 18px;
+    box-shadow: -6px -6px 14px var(--hl-gold), 9px 9px 20px var(--sh-gold);
+  }
+  .doc blockquote p{ margin: 0 0 8px; font-size: 15.5px; }
+  .doc blockquote p:last-child{ margin-bottom: 0; }
+  .doc blockquote ol, .doc blockquote ul{ margin: 8px 0 0; }
+
+  .doc table{ border-collapse: collapse; width: 100%; margin: 0 0 18px; font-size: 15px; }
+  .doc th, .doc td{ text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+  .doc th{ font-weight: 600; color: var(--leaf-deep); }
+
+  .error-box{
+    background: var(--clay-neutral); border-radius: 18px; padding: 24px;
+    box-shadow: -6px -6px 14px var(--hl-neutral), 9px 9px 20px var(--sh-neutral);
+  }
+
+  footer{
+    padding: 30px 0 60px; font-size: 14px; color: var(--ink-soft);
+    border-top: 1px solid var(--rule); margin-top: 10px;
+  }
+  footer .wrap{ padding-top: 26px; }
+  footer a{ color: var(--ink-soft); }
+  footer a:hover{ color: var(--gold-deep); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <a class="mark" href="../">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 21V11" stroke="#3F6B44" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M12 12C12 7 8 6 5 6.5C5.2 10.5 8.5 12.3 12 12Z" fill="#3F6B44"/>
+        <path d="M12 9C12 4.5 16 3.5 19 4C18.7 8 15.4 9.8 12 9Z" fill="#B97F22"/>
+      </svg>
+      <span>Promptophyte</span>
+    </a>
+    <div class="tabs">
+      <button class="tab" id="tab-1" data-doc="level-1">Level 1</button>
+      <button class="tab" id="tab-2" data-doc="level-2">Level 2</button>
+    </div>
+  </div>
+
+  <div class="doc" id="doc">
+    <p>Loading…</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <a href="https://github.com/Berniebiloxi/promptophyte">Source on GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var docEl = document.getElementById('doc');
+  var tabs = { 'level-1': document.getElementById('tab-1'), 'level-2': document.getElementById('tab-2') };
+
+  function setActive(doc){
+    Object.keys(tabs).forEach(function(k){ tabs[k].classList.toggle('active', k === doc); });
+  }
+
+  function rewriteInternalLinks(container){
+    var links = container.querySelectorAll('a[href]');
+    links.forEach(function(a){
+      var href = a.getAttribute('href');
+      if (/level-1\.md(#.*)?$/.test(href)){
+        a.setAttribute('href', 'reader.html?doc=level-1');
+      } else if (/level-2\.md(#.*)?$/.test(href)){
+        a.setAttribute('href', 'reader.html?doc=level-2');
+      }
+    });
+  }
+
+  function load(doc){
+    if (doc !== 'level-1' && doc !== 'level-2') doc = 'level-1';
+    setActive(doc);
+    docEl.classList.add('loading');
+    fetch(doc + '.md')
+      .then(function(res){ if (!res.ok) throw new Error('fetch failed'); return res.text(); })
+      .then(function(md){
+        docEl.innerHTML = marked.parse(md);
+        rewriteInternalLinks(docEl);
+        docEl.classList.remove('loading');
+        document.title = 'Promptophyte — Handbook (' + (doc === 'level-1' ? 'Level 1' : 'Level 2') + ')';
+      })
+      .catch(function(){
+        docEl.innerHTML = '<div class="error-box"><p>Couldn\u2019t load this page right now.</p>' +
+          '<p><a href="' + doc + '.md">Open the raw file on GitHub instead</a>.</p></div>';
+        docEl.classList.remove('loading');
+      });
+  }
+
+  Object.keys(tabs).forEach(function(k){
+    tabs[k].addEventListener('click', function(){
+      history.pushState(null, '', 'reader.html?doc=' + k);
+      load(k);
+    });
+  });
+
+  window.addEventListener('popstate', function(){
+    load(new URLSearchParams(location.search).get('doc'));
+  });
+
+  load(new URLSearchParams(location.search).get('doc'));
+})();
+</script>
+
+</body>
+</html>
