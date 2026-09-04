@@ -1,0 +1,59 @@
+name: Handbook feedback
+description: Something in the handbook or meta-prompt was confusing, wrong, or missing.
+title: "[Handbook] "
+labels: ["handbook feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. "I got stuck here and didn't know what to
+        do" is a genuinely useful report — you don't need to suggest a fix, and
+        you don't need to know anything technical. Fill in what you can and skip
+        the rest.
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which part is this about?
+      options:
+        - Handbook — Level 1
+        - Handbook — Level 2
+        - meta-prompt.md (the prompt itself)
+        - README
+        - Not sure / more than one
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Where in that page?
+      description: >-
+        A heading, or a short quote of the sentence, so we can find the exact
+        spot. Leave blank if it was more of a general impression.
+      placeholder: e.g. the "Concurrent-use conflict handling" section, or a quoted sentence
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What was confusing, wrong, or missing?
+      description: >-
+        In your own words. If the meta-prompt asked you something that made no
+        sense, paste the question here and tell us what tripped you up.
+    validations:
+      required: true
+  - type: textarea
+    id: what-would-help
+    attributes:
+      label: What would have helped?
+      description: Optional. Even a rough idea is useful — "an example here" is fine.
+    validations:
+      required: false
+  - type: input
+    id: experience
+    attributes:
+      label: How much experience do you have with this kind of thing?
+      description: >-
+        Optional, but it helps us judge who the wording is landing for.
+        e.g. "none", "built one small thing before", "I write code".
+    validations:
+      required: false
