@@ -59,10 +59,12 @@ meta-prompt.
 
 **Works well:**
 
-- **[Claude Code](https://claude.com/claude-code)** — a
-  command-line tool from Anthropic. This is what the meta-prompt was
-  designed and tested against. It reads and writes files, can run the
-  project to check it works, and keeps long instructions straight.
+- **[Claude Code](https://claude.com/claude-code)** — a tool from Anthropic
+  that runs in a terminal, a desktop app, or your browser. This is what the
+  meta-prompt was designed and tested against. It reads and writes files,
+  can run the project to check it works, and keeps long instructions
+  straight. New to it? See
+  [**Setting up Claude Code**](setup-claude-code.md).
 - **[Claude](https://claude.ai)** or **[ChatGPT](https://chatgpt.com)** on
   their current top models — good for the interview and for smaller builds
   where you copy the files out by hand.
@@ -104,10 +106,11 @@ working — go take the next step.
 ## What's in here
 
 ```
-quickstart.md         The short prompt — fastest path to something running.
-meta-prompt.md        The full reusable prompt. The complete interview.
-handbook/level-1.md    The full beginner walkthrough.
-handbook/level-2.md    A deeper-dive glossary for terms that come up.
+quickstart.md          The short prompt — fastest path to something running.
+meta-prompt.md         The full reusable prompt. The complete interview.
+setup-claude-code.md   How to install and start Claude Code, from scratch.
+handbook/level-1.md     The full beginner walkthrough.
+handbook/level-2.md     A deeper-dive glossary for terms that come up.
 ```
 
 ## Feedback and questions
