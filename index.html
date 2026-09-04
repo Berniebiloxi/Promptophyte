@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promptophyte — grow a real software project from a single prompt</title>
+<meta name="description" content="A free, open-source meta-prompt that turns an AI coding agent into a patient product manager for people with zero coding experience.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:      #F1EEE2;
+    --paper-deep: #E7E1CC;
+    --ink:        #1E231A;
+    --ink-soft:   #4B5044;
+    --rule:       #C9C2A2;
+    --gold:       #B97F22;
+    --gold-deep:  #93641A;
+    --leaf:       #3F6B44;
+    --leaf-deep:  #2E4F33;
+
+    --clay-neutral: #EEE8D3;
+    --clay-gold:    #E7B968;
+    --clay-leaf:    #A9CBAA;
+    --clay-quiet:   #E3DEC9;
+
+    --hl-neutral: rgba(255,253,246,.85);  --sh-neutral: rgba(30,35,26,.14);
+    --hl-gold:    rgba(255,244,218,.85);  --sh-gold:    rgba(147,100,26,.30);
+    --hl-leaf:    rgba(236,247,236,.85);  --sh-leaf:    rgba(46,79,51,.28);
+    --hl-quiet:   rgba(250,247,236,.7);   --sh-quiet:   rgba(30,35,26,.11);
+
+    --max: 1040px;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: var(--gold-deep); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover{ color: var(--gold); }
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--leaf);
+    outline-offset: 3px;
+  }
+
+  h1, h2, h3{
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+  header{ padding: 36px 0 0; }
+  .mark{ display: inline-flex; align-items: center; gap: 10px; cursor: default; }
+  .mark svg{ width: 24px; height: 24px; flex-shrink: 0; transition: transform .5s var(--ease); }
+  .mark:hover svg{ transform: rotate(-8deg) scale(1.12); }
+  .mark span{ font-family: 'Newsreader', Georgia, serif; font-size: 19px; font-weight: 500; }
+
+  .hero{ padding: 48px 0 44px; max-width: 720px; }
+  h1{ font-size: clamp(34px, 5.2vw, 50px); line-height: 1.12; margin-bottom: 18px; }
+  .sub{ font-size: 19px; color: var(--ink-soft); max-width: 46ch; margin: 0; }
+
+  .bento{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 22px;
+    padding-bottom: 8px;
+  }
+  .span-6{ grid-column: span 6; }
+  .span-3{ grid-column: span 3; }
+  .span-2{ grid-column: span 2; }
+
+  @media (max-width: 840px){
+    .span-3, .span-2{ grid-column: span 6; }
+  }
+
+  .tile{
+    border-radius: 30px;
+    padding: 30px;
+    background: var(--clay-neutral);
+    box-shadow: -10px -10px 22px var(--hl-neutral), 14px 14px 30px var(--sh-neutral);
+    transition: transform .28s var(--ease), box-shadow .28s var(--ease);
+  }
+  .tile:hover{
+    transform: translateY(-6px);
+    box-shadow: -12px -12px 26px var(--hl-neutral), 20px 20px 40px var(--sh-neutral);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tile, .tile:hover{ transform: none; transition: none; }
+  }
+
+  .tile-gold{ background: var(--clay-gold); box-shadow: -10px -10px 22px var(--hl-gold), 14px 14px 30px var(--sh-gold); }
+  .tile-gold:hover{ box-shadow: -12px -12px 26px var(--hl-gold), 20px 20px 40px var(--sh-gold); }
+  .tile-leaf{ background: var(--clay-leaf); box-shadow: -10px -10px 22px var(--hl-leaf), 14px 14px 30px var(--sh-leaf); }
+  .tile-leaf:hover{ box-shadow: -12px -12px 26px var(--hl-leaf), 20px 20px 40px var(--sh-leaf); }
+  .tile-quiet{
+    background: var(--clay-quiet);
+    box-shadow: -6px -6px 14px var(--hl-quiet), 8px 8px 18px var(--sh-quiet);
+  }
+  .tile-quiet:hover{
+    transform: translateY(-3px);
+    box-shadow: -7px -7px 16px var(--hl-quiet), 11px 11px 22px var(--sh-quiet);
+  }
+
+  .tile h2, .tile h3{ margin-bottom: 10px; }
+  .tile p{ margin: 0; color: var(--ink); }
+  .tile p + p{ margin-top: 10px; }
+
+  .tile-icon{ width: 42px; height: 42px; margin-bottom: 16px; display: block; }
+
+  .demo-tile{ padding: 32px 32px 28px; }
+  .demo-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--leaf-deep);
+    margin: 0 0 16px;
+  }
+  .line{ display: flex; gap: 12px; margin-bottom: 13px; opacity: 0; transform: translateY(4px); }
+  .line.show{ opacity: 1; transform: translateY(0); transition: opacity .35s ease, transform .35s ease; }
+  .who{ flex-shrink: 0; width: 96px; font-size: 13px; font-weight: 600; padding-top: 2px; }
+  .who.ai{ color: var(--leaf-deep); }
+  .who.you{ color: var(--gold-deep); }
+  .bubble{ font-size: 15.5px; }
+  .bubble .pm101{
+    display: block; font-size: 12.5px; font-family: 'IBM Plex Mono', monospace;
+    color: var(--ink-soft); margin-bottom: 3px;
+  }
+  .opts{ margin-top: 4px; font-size: 14.5px; color: var(--ink-soft); }
+  .opts .picked{ color: var(--leaf-deep); font-weight: 600; }
+  .cursor{
+    display: inline-block; width: 7px; height: 15px; background: var(--ink);
+    margin-left: 2px; vertical-align: -2px; animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+  @media (prefers-reduced-motion: reduce){
+    .line{ opacity: 1 !important; transform: none !important; transition: none !important; }
+    .cursor{ animation: none; opacity: .6; }
+  }
+
+  .btn{
+    font: inherit; font-size: 15px; font-weight: 600;
+    padding: 13px 20px; border-radius: 20px; border: none;
+    cursor: pointer; display: inline-block;
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  .btn-solid{
+    background: var(--gold-deep); color: var(--paper);
+    box-shadow: -5px -5px 12px rgba(255,244,218,.5), 6px 6px 14px rgba(60,38,4,.35);
+  }
+  .btn-solid:hover{ transform: translateY(-3px); box-shadow: -6px -6px 14px rgba(255,244,218,.55), 9px 9px 18px rgba(60,38,4,.4); }
+  .btn-solid:active{ transform: translateY(1px) scale(.97); box-shadow: -2px -2px 6px rgba(255,244,218,.4), 3px 3px 8px rgba(60,38,4,.3); }
+
+  .btn-ghost{
+    background: rgba(255,255,255,.35); color: var(--ink);
+    box-shadow: -4px -4px 10px rgba(255,255,255,.5), 5px 5px 12px rgba(30,35,26,.14);
+  }
+  .btn-ghost:hover{ transform: translateY(-3px); box-shadow: -5px -5px 12px rgba(255,255,255,.55), 8px 8px 16px rgba(30,35,26,.18); }
+  .btn-ghost:active{ transform: translateY(1px) scale(.97); box-shadow: -2px -2px 5px rgba(255,255,255,.4), 2px 2px 6px rgba(30,35,26,.12); }
+
+  .btn-row{ display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+
+  @keyframes pop{ 0%{ transform: scale(1); } 45%{ transform: scale(1.09); } 100%{ transform: scale(1); } }
+  .btn.popped{ animation: pop .38s var(--ease); }
+  @media (prefers-reduced-motion: reduce){
+    .btn.popped{ animation: none; }
+    .btn, .btn-solid:hover, .btn-ghost:hover, .btn-solid:active, .btn-ghost:active{ transform: none !important; }
+  }
+
+  section{ padding: 10px 0 46px; }
+  section.first{ padding-top: 46px; }
+
+  footer{
+    padding: 40px 0 60px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--rule);
+    margin-top: 16px;
+  }
+  footer .wrap{ padding-top: 32px; }
+  footer a{ color: var(--ink-soft); }
+  footer a:hover{ color: var(--gold-deep); }
+  .foot-links{ display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 21V11" stroke="#3F6B44" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M12 12C12 7 8 6 5 6.5C5.2 10.5 8.5 12.3 12 12Z" fill="#3F6B44"/>
+      <path d="M12 9C12 4.5 16 3.5 19 4C18.7 8 15.4 9.8 12 9Z" fill="#B97F22"/>
+    </svg>
+    <span>Promptophyte</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero first">
+    <h1>Grow a real software project from a single prompt.</h1>
+    <p class="sub">A free, open-source meta-prompt that turns an AI coding agent into a patient product manager — one that asks before it assumes. No coding experience required.</p>
+  </section>
+
+  <section class="bento" aria-label="Overview and getting started">
+
+    <div class="tile tile-leaf span-6 demo-tile" aria-label="Example interview with the meta-prompt">
+      <p class="demo-label">a real exchange from the interview, shortened</p>
+      <div id="lines"></div>
+    </div>
+
+    <div class="tile span-2">
+      <svg class="tile-icon" viewBox="0 0 42 42" fill="none" aria-hidden="true">
+        <rect x="9" y="7" width="24" height="28" rx="4" fill="#F1EEE2" stroke="#4B5044" stroke-width="1.4"/>
+        <path d="M14 15h14M14 21h14M14 27h9" stroke="#93641A" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <h3>Read the handbook</h3>
+      <p><a href="handbook/level-1.md">Level&nbsp;1</a> walks through the whole process. <a href="handbook/level-2.md">Level&nbsp;2</a> explains any term that trips you up.</p>
+    </div>
+
+    <div class="tile tile-gold span-2">
+      <svg class="tile-icon" viewBox="0 0 42 42" fill="none" aria-hidden="true">
+        <rect x="10" y="9" width="18" height="24" rx="3" fill="#F1EEE2" stroke="#93641A" stroke-width="1.4"/>
+        <path d="M28 14h4v20H14v-4" stroke="#93641A" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M15 18l2.6 2.6L23 15" stroke="#2E4F33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h3>Copy the prompt</h3>
+      <p>Quick win, or the real thing:</p>
+      <div class="btn-row">
+        <button class="btn btn-solid" id="copy-quick" data-file="quickstart.md" data-label="Quickstart">Quickstart</button>
+        <button class="btn btn-ghost" id="copy-meta" data-file="meta-prompt.md" data-label="Full prompt">Full prompt</button>
+      </div>
+    </div>
+
+    <div class="tile span-2">
+      <svg class="tile-icon" viewBox="0 0 42 42" fill="none" aria-hidden="true">
+        <path d="M8 30l24-9-24-9 5 9-5 9z" fill="#EEE8D3" stroke="#4B5044" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      <h3>Paste it in, answer its questions</h3>
+      <p>It explains every idea in plain language before asking you to decide.</p>
+    </div>
+
+    <div class="tile tile-leaf span-3">
+      <h2>What this is</h2>
+      <p>A prompt, not a program. Paste it into an AI coding agent and it interviews you first, in plain language, before writing any code. Every answer becomes part of a written plan the AI actually follows.</p>
+      <p>You never write code. Your job is deciding what gets built and why — directing a contractor, not being one.</p>
+    </div>
+
+    <div class="tile span-3">
+      <h2>Works with any AI agent</h2>
+      <p>Built and tested against Claude Code. Works as plain text with ChatGPT, Cursor, Gemini CLI, and most other AI coding tools — nothing to install to try it.</p>
+    </div>
+
+    <div class="tile tile-quiet span-6">
+      <h2>Where this fits</h2>
+      <p>This isn't competing with developer-focused tools like GitHub Spec Kit, BMAD, or GSD — those are excellent once you already code. Promptophyte exists for the stage before that: the on-ramp for someone who's never directed an AI to build anything, written for a reader who knows how to browse the web and not much else yet.</p>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="https://github.com/Berniebiloxi/promptophyte">Source on GitHub</a>
+      <a href="https://github.com/Berniebiloxi/promptophyte/blob/main/LICENSE">License</a>
+      <a href="https://github.com/Berniebiloxi/promptophyte/blob/main/CONTRIBUTING.md">Contributing</a>
+      <a href="https://github.com/Berniebiloxi/promptophyte/issues">Issues</a>
+    </div>
+    <p>Free and open source. Grown, not built, from a single prompt.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var script = [
+    { who: 'ai',  html: 'What do you want to build?' },
+    { who: 'you', html: 'A shared grocery list for me and my roommate.' },
+    { who: 'ai',  html: '<span class="pm101">PM 101: if you both check the list at the same time, something has to decide whose change counts.</span>If you both edit it at once, what should happen?<div class="opts"><span class="picked">① Most recent change wins</span> &nbsp; ② One device at a time</div>' },
+    { who: 'you', html: '1 — that\u2019s fine for us.' },
+    { who: 'ai',  html: 'Got it, noted. Next: does this need to work well on a phone screen too, or just a laptop?' }
+  ];
+
+  var container = document.getElementById('lines');
+
+  function render(){
+    container.innerHTML = '';
+    script.forEach(function(step, i){
+      var row = document.createElement('div');
+      row.className = 'line' + (reduced ? ' show' : '');
+      var who = document.createElement('div');
+      who.className = 'who ' + step.who;
+      who.textContent = step.who === 'ai' ? 'Promptophyte' : 'You';
+      var bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.innerHTML = step.html + (i === script.length - 1 ? '<span class="cursor" aria-hidden="true"></span>' : '');
+      row.appendChild(who);
+      row.appendChild(bubble);
+      container.appendChild(row);
+    });
+  }
+
+  function play(){
+    render();
+    if (reduced) return;
+    var rows = container.querySelectorAll('.line');
+    rows.forEach(function(row, i){
+      setTimeout(function(){ row.classList.add('show'); }, 500 + i * 950);
+    });
+    var total = 500 + rows.length * 950 + 3200;
+    setTimeout(play, total);
+  }
+  play();
+
+  function wireCopy(btnId){
+    var btn = document.getElementById(btnId);
+    btn.addEventListener('click', function(){
+      var file = btn.getAttribute('data-file');
+      var label = btn.getAttribute('data-label');
+      fetch(file)
+        .then(function(res){ if (!res.ok) throw new Error('fetch failed'); return res.text(); })
+        .then(function(text){ return navigator.clipboard.writeText(text); })
+        .then(function(){
+          btn.textContent = 'Copied!';
+          if (!reduced){ btn.classList.remove('popped'); void btn.offsetWidth; btn.classList.add('popped'); }
+          setTimeout(function(){ btn.textContent = label; }, 1800);
+        })
+        .catch(function(){
+          window.open('https://github.com/Berniebiloxi/promptophyte/blob/main/' + file, '_blank');
+        });
+    });
+  }
+  wireCopy('copy-meta');
+  wireCopy('copy-quick');
+})();
+</script>
+
+</body>
+</html>
