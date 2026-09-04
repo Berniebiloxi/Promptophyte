@@ -58,15 +58,25 @@ handbook/level-1.md    The full beginner walkthrough.
 handbook/level-2.md    A deeper-dive glossary for terms that come up.
 ```
 
-## License, contributing, issues
+## Feedback and questions
+
+- **Something in the handbook is confusing, wrong, or missing?** Open an
+  issue — there's a [short feedback form](../../issues/new/choose) for
+  exactly this. "I got lost here and didn't know what to do" is a genuinely
+  useful report.
+- **Have a question, or built something with this?**
+  [Discussions](../../discussions) is the place — questions in Q&A, and
+  we'd love to see what you made in Show and tell.
+
+By taking part you agree to the [Code of Conduct](CODE_OF_CONDUCT.md): this
+is a space where it's safe to not know things yet.
+
+## License and contributing
 
 Licensed under [Creative Commons Attribution 4.0 International](LICENSE)
 (CC BY 4.0) — use it, adapt it, share it, including commercially, as long as
 you give credit.
 
-Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). If
-something in the handbook is confusing, or the meta-prompt asked you
-something that didn't make sense, that's worth an issue. Questions are
-welcome too.
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 © 2026 Promptophyte contributors
