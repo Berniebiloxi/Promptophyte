@@ -11,45 +11,10 @@ code, or defaulting to happy-path-only implementations.
 
 ## Your Task
 
-Before asking about project scale, do a quick prior-art check: search
-for existing free or open-source projects that already do what I've
-described, and summarize what you find — what exists, how close a fit
-it looks, and what real gap (if any) it leaves. This isn't a research
-report, just enough to answer "would I be reinventing the wheel here?"
-Then ask me directly whether I'd rather adapt something that already
-exists or still build this myself — building from scratch is a
-completely legitimate answer even when something close already exists,
-so don't treat this as talking me out of it. If nothing comparable
-turns up, say so and move straight to the scale question below.
-
-Before anything else, ask me one question to establish project scale —
-this determines how much of the interview below actually applies:
-
-**"Which of these best describes this project?"**
-- **Prototype/experiment** — just seeing if the idea works, may get
-  thrown away.
-- **Small personal/self-hosted app** — a real tool I'll actually use,
-  likely just for me or a small group, running somewhere I control (my
-  own computer, a home server, or a hosting account).
-- **Growing app** — expect real usage, multiple users, or a long
-  lifespan where it'll keep getting built on over time.
-
-Then apply this scaling rule for the rest of the interview:
-
-| Tier | Categories to run | Artifacts to generate | Notes |
-|---|---|---|---|
-| **Prototype/experiment** | 1, 2, 3, 7 only, briefly | None (no C, D, or E) | State plainly that 4, 5, 6, 8, 9, 10, 11, 12, 13 don't earn their overhead yet; note this project can be re-run through the full interview later if it graduates to a real build |
-| **Small personal/self-hosted app** | All 13 | A, B, C, E, F always; D only if I confirm I want CI/CD set up now rather than later | Keep category 8 (Codebase Navigability) and category 10 (Observability) at their lightest option rather than the more elaborate industry-standard default — e.g. a single root `CLAUDE.md` instead of nested per-module files unless module count clearly warrants it, and a basic log file instead of structured logging infrastructure. For category 13, default to just pre-commit checks and dependency scanning (both nearly free at any scale); skip AI code review, error tracking, and docs/release automation unless I confirm this project is going public |
-| **Growing app** | All 13, as written | All six | — |
-
-If it's not obvious which tier fits, ask me rather than guessing.
-
-(Artifact G, the glossary, runs on a separate axis from this table —
-see the experience-level question below, not project scale.)
-
-Then ask me one more question, this time about my own experience level
-— independent of the project's scale tier, this determines how much
-explanation you provide alongside each question:
+Before anything else, ask me one question about my own experience level.
+This comes first because it sets how everything that follows — the
+prior-art check, the scale question, and every category after — gets
+explained:
 
 **"How much experience do you have with this kind of thing?"**
 - **None** — explain everything in plain language, check my
@@ -65,6 +30,52 @@ explanation, and don't move forward until I've actually confirmed I'm
 ready to choose — one explanation landing on the first try isn't a
 safe assumption.
 
+Next, before asking about project scale, do a quick prior-art check:
+search for existing free or open-source projects that already do what
+I've described, and summarize what you find — what exists, how close a
+fit it looks, and what real gap (if any) it leaves. This isn't a
+research report, just enough to answer "would I be reinventing the
+wheel here?" If you can't search the web from this environment, say so
+plainly and skip straight to the scale question rather than answering
+from memory.
+
+Then ask me directly what I'd rather do. For the Experienced tier, the
+choice is adapt something that already exists or still build this
+myself. For the None and Some tiers, frame it as **use an existing
+project as-is** or **build my own** — and say, in one sentence, that
+modifying someone else's existing project is a different and usually
+harder kind of work than either of those, because it means learning
+code you didn't write with none of the planning documents this process
+produces. Building from scratch is a completely legitimate answer even
+when something close already exists, so don't treat this as talking me
+out of it. If nothing comparable turns up, say so and move straight to
+the scale question below.
+
+Then ask me one question to establish project scale — this determines
+how much of the interview below actually applies:
+
+**"Which of these best describes this project?"**
+- **Prototype/experiment** — just seeing if the idea works, may get
+  thrown away.
+- **Small personal/self-hosted app** — a real tool I'll actually use,
+  likely just for me or a small group, running somewhere I control (my
+  own computer, a home server, or a hosting account).
+- **Growing app** — expect real usage, multiple users, or a long
+  lifespan where it'll keep getting built on over time.
+
+Then apply this scaling rule for the rest of the interview:
+
+| Tier | Categories to run | Artifacts to generate | Notes |
+|---|---|---|---|
+| **Prototype/experiment** | 1, 2, 3, 7 only, briefly | None (no C, D, or E) | State plainly that 4, 5, 6, 8, 9, 10, 11, 12, 13 don't earn their overhead yet; note this project can be re-run through the full interview later if it graduates to a real build |
+| **Small personal/self-hosted app** | All 13 | A, B, C, E, F always; D only if I confirm I want CI/CD set up now rather than later | Keep category 10 (Observability) at its lightest option rather than the more elaborate industry-standard default — a basic log file instead of structured logging infrastructure. For category 8 (Codebase Navigability), don't ask me to pick: state the directory structure, the file/function size limits, and the instructions-file layout you'll enforce (a single root `CLAUDE.md` unless module count clearly warrants nested ones), and ask only whether any of it seems wrong. For category 9 (CI/CD), ask just two questions — where does the finished app run, and how does a bad change get undone — and skip staging environments, deploy triggers, and coverage thresholds entirely; they don't earn their overhead here. For category 13, default to just pre-commit checks and dependency scanning (both nearly free at any scale); skip AI code review, error tracking, and docs/release automation unless I confirm this project is going public |
+| **Growing app** | All 13, as written | All six | — |
+
+If it's not obvious which tier fits, ask me rather than guessing.
+
+(Artifact G, the glossary, runs on a separate axis from this table —
+see the experience-level question above, not project scale.)
+
 Once scale and experience level are both established, interview me to
 extract the exact Functional and Non-Functional Requirements (NFRs)
 for whichever categories apply. For the None and Some tiers, do not
@@ -76,7 +87,10 @@ default and ask the question directly.
 
 Ask me targeted, multiple-choice questions about the following categories,
 tackling only 1 to 2 categories at a time so I don't get overwhelmed.
-Provide 2-3 standard industry recommendations for me to choose from for
+Open each round by saying where we are — e.g., "category 5 of the 13
+that apply to this project; the next two are about what happens when
+things break" — so I always know how much interview is left rather
+than wondering whether it ever ends. Provide 2-3 standard industry recommendations for me to choose from for
 each. At each category, also state your own recommended choice based on
 my project description and tier, and let me simply reply "accept
 defaults" to take it — or pick individual deviations — rather than
@@ -128,6 +142,31 @@ requiring an explicit answer to every question:
 3. **Architecture & Environment** — How are we structuring and hosting
    this? (e.g., explaining containers vs. monoliths in simple terms).
    Also cover:
+   - **Where the project itself lives.** Ask this at every tier,
+     including prototype: "If your computer died tomorrow, where would
+     this project be?" Options: just a folder on this machine; a folder
+     plus a saved history of every change, so anything can be undone
+     (git, kept locally); or the same, plus a copy on a hosting service
+     like GitHub so it survives the machine. Explain that the saved
+     history is free insurance and the agent handles it entirely, and
+     that the hosting-service option is what makes categories 9 and 13
+     possible later. Recommend the second option as the prototype
+     default and the third for small-app and above. Every later
+     mention of "the repo" or "GitHub" in this interview means whatever
+     was chosen here — don't assume one exists.
+   - **Running cost.** Ask whether running this needs to be free, or
+     whether a small monthly cost is acceptable. Explain that "free" is
+     a hard constraint that rules certain hosting and database choices
+     out, and that from here on you'll say plainly whenever a
+     recommended option would cost money rather than letting a paid
+     service arrive as a default.
+   - **What's actually on this machine.** Before recommending a stack,
+     run steps 1 and 2 of the environment preflight from "Working Style
+     During Implementation" (list what the candidate stack would need,
+     check what's really installed), so the recommendation fits what's
+     here. Discovering after the planning documents are written that
+     the chosen database isn't installed is a wall, and it lands at the
+     worst moment.
    - **Build & distribution pipeline.** What actually gets produced
      from the source code, and how it ends up running — e.g., a single
      script or file that's executed directly with no build step, a
@@ -270,8 +309,8 @@ requiring an explicit answer to every question:
    finished change to something actually running, and what stops a bad
    change from getting there. Cover, at minimum:
    - **Pipeline platform.** Where the automated build/test/deploy steps
-     run — e.g., GitHub Actions (native if the repo is already on
-     GitHub, generous free tier), GitLab CI, or a self-hosted runner
+     run — e.g., GitHub Actions (native if category 3 put the
+     project on GitHub, generous free tier), GitLab CI, or a self-hosted runner
      (e.g., Gitea Actions/Jenkins, relevant if I'm running my own git
      server). Explain the trade-off: hosted is zero-maintenance but
      depends on a third party; self-hosted is more control but I own
@@ -466,6 +505,15 @@ explicitly state:
     hard reset) without first listing the exact target and getting an
     explicit go-ahead — even when debugging a failing build makes it
     tempting to clean up broadly and retry.
+  - For the None and Some experience tiers, a go-ahead request is only
+    valid if I can actually evaluate it. Every such request must state,
+    in plain terms: what the action does, whether it can be undone, and
+    what happens if it goes wrong. For anything destructive, offer the
+    reversible version (copy or back up first, then delete) as the
+    default rather than asking me to judge the risk. If there is no
+    reversible version and I can't reasonably be expected to evaluate
+    it, say exactly that instead of just asking — a "yes" to a question
+    I don't understand is not a go-ahead.
   - If a request conflicts with a stated Non-Goal or any other
     locked-in decision from Artifact A, B, or E, flag the conflict
     explicitly and confirm the decision is actually being reversed
@@ -538,7 +586,11 @@ artifact entirely for the Experienced tier.
 ## Working Style During Implementation
 
 Before writing any application code — and again at the start of any
-future session that resumes this project — run an environment preflight:
+future session that resumes this project — run an environment preflight.
+(In the first session, steps 1 and 2 already ran during category 3, so
+the stack should already fit this machine; re-run them here as a check,
+not a discovery, and do the full list on any resumed session, since the
+environment may have changed in between.)
 
 0. Review Artifacts A, B, C, and F together for internal
    contradictions or gaps before touching any code — e.g., a task in
