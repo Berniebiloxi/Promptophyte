@@ -194,6 +194,23 @@
   footer a{ color: var(--ink-soft); }
   footer a:hover{ color: var(--gold-deep); }
   .foot-links{ display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 10px; }
+
+  /* ---------- Merge tool ---------- */
+  .merge-tile textarea{
+    display: block; width: 100%; min-height: 150px; resize: vertical;
+    font: inherit; font-size: 15.5px; line-height: 1.5; color: var(--ink);
+    background: rgba(255,253,246,.75); border: none; border-radius: 18px;
+    padding: 16px 18px; margin: 16px 0 14px;
+    box-shadow: inset 4px 4px 10px rgba(30,35,26,.12), inset -4px -4px 10px rgba(255,255,255,.7);
+  }
+  .merge-tile textarea::placeholder{ color: var(--ink-soft); opacity: .8; }
+  .merge-result[hidden]{ display: none; }
+  .merge-result{ margin-top: 12px; }
+  .merge-note{ font-size: 14.5px; color: var(--ink-soft); min-height: 1.5em; margin-top: 12px !important; }
+  .merge-note.err{ color: var(--gold-deep); font-weight: 600; }
+  .merge-credit{ font-size: 14.5px; color: var(--ink-soft); }
+  .btn:disabled{ opacity: .6; cursor: default; transform: none; }
+  .sr-only{ position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -229,6 +246,7 @@
       </svg>
       <h3>Read the handbook</h3>
       <p><a href="handbook/reader.html?doc=level-1">Level&nbsp;1</a> walks through the whole process. <a href="handbook/reader.html?doc=level-2">Level&nbsp;2</a> explains any term that trips you up.</p>
+      <p>Two shorter guides: <a href="handbook/reader.html?doc=setup-claude-code">setting up Claude&nbsp;Code</a>, and <a href="handbook/reader.html?doc=publishing-your-project">publishing your project</a> so a friend can open it.</p>
     </div>
 
     <div class="tile tile-gold span-2">
@@ -269,6 +287,24 @@
       <p>This isn't competing with developer-focused tools like GitHub Spec Kit, BMAD, or GSD — those are excellent once you already code. Promptophyte exists for the stage before that: the on-ramp for someone who's never directed an AI to build anything, written for a reader who knows how to browse the web and not much else yet.</p>
     </div>
 
+  </section>
+
+  <section class="bento" aria-label="Merge your idea into the prompt">
+    <div class="tile tile-gold span-6 merge-tile">
+      <h2>Already have your idea scoped? Merge it in.</h2>
+      <p>Paste your idea below — the output from <a href="https://arcade.pirillo.com/vibe-brief.html">Vibe Brief</a>, or just your own sentence or two about what you want to build — and get back the full meta-prompt with it already filled in, ready to paste into your AI tool.</p>
+      <label class="sr-only" for="merge-input">Your idea</label>
+      <textarea id="merge-input" placeholder="e.g. A shared grocery list for me and my roommate that we can both check off from our phones."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-solid" id="merge-go">Merge into the full prompt</button>
+      </div>
+      <p class="merge-note" id="merge-note" role="status" aria-live="polite"></p>
+      <div class="btn-row merge-result" id="merge-result" hidden>
+        <button class="btn btn-solid" id="merge-copy">Copy to clipboard</button>
+        <button class="btn btn-ghost" id="merge-download">Download as .md</button>
+      </div>
+      <p class="merge-credit"><a href="https://arcade.pirillo.com/vibe-brief.html">Vibe Brief</a> is Chris Pirillo's free worksheet for turning a vague app idea into a scoped, paste-ready brief. Promptophyte is built to pick up right where it leaves off.</p>
+    </div>
   </section>
 </main>
 
@@ -347,6 +383,85 @@
   }
   wireCopy('copy-meta');
   wireCopy('copy-quick');
+
+  // ---- Merge tool: fill the user's idea into meta-prompt.md's placeholder ----
+  var mergeInput    = document.getElementById('merge-input');
+  var mergeGo       = document.getElementById('merge-go');
+  var mergeResult   = document.getElementById('merge-result');
+  var mergeCopy     = document.getElementById('merge-copy');
+  var mergeDownload = document.getElementById('merge-download');
+  var mergeNote     = document.getElementById('merge-note');
+  var merged = '';
+
+  function note(msg, isErr){
+    mergeNote.textContent = msg;
+    mergeNote.classList.toggle('err', !!isErr);
+  }
+  function pop(btn){
+    if (!reduced){ btn.classList.remove('popped'); void btn.offsetWidth; btn.classList.add('popped'); }
+  }
+
+  // Editing the idea after a merge makes the merged text stale — hide it until they merge again.
+  mergeInput.addEventListener('input', function(){
+    if (merged){ merged = ''; mergeResult.hidden = true; note(''); }
+  });
+
+  mergeGo.addEventListener('click', function(){
+    var idea = mergeInput.value.trim();
+    if (!idea){
+      note('The box above is empty — paste your Vibe Brief output, or type a sentence about what you want to build, first.', true);
+      mergeInput.focus();
+      return;
+    }
+    mergeGo.disabled = true;
+    fetch('meta-prompt.md')
+      .then(function(res){ if (!res.ok) throw new Error('fetch failed'); return res.text(); })
+      .then(function(text){
+        var placeholder = /\{Insert[^}]*\}/;
+        if (!placeholder.test(text)) throw new Error('no placeholder');
+        // A one-liner slots into the sentence; a multi-paragraph brief starts on its own line.
+        var insert = idea.indexOf('\n') === -1 ? idea : '\n\n' + idea;
+        merged = text.replace(placeholder, function(){ return insert; });
+        mergeResult.hidden = false;
+        note('Merged — your idea is now filled into the full prompt. Copy it or download it below.');
+        pop(mergeGo);
+      })
+      .catch(function(err){
+        merged = '';
+        mergeResult.hidden = true;
+        note(err.message === 'no placeholder'
+          ? 'Couldn’t find the fill-in-your-idea line in the current prompt. Use "Full prompt" above and paste your idea in by hand.'
+          : 'Couldn’t load the prompt right now. Try again in a moment, or use "Full prompt" above and paste your idea in by hand.', true);
+      })
+      .then(function(){ mergeGo.disabled = false; });
+  });
+
+  mergeCopy.addEventListener('click', function(){
+    if (!merged) return;
+    navigator.clipboard.writeText(merged)
+      .then(function(){
+        mergeCopy.textContent = 'Copied!';
+        pop(mergeCopy);
+        setTimeout(function(){ mergeCopy.textContent = 'Copy to clipboard'; }, 1800);
+      })
+      .catch(function(){
+        note('Couldn’t reach the clipboard — use Download instead.', true);
+      });
+  });
+
+  mergeDownload.addEventListener('click', function(){
+    if (!merged) return;
+    var blob = new Blob([merged], { type: 'text/markdown' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'promptophyte-prompt.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    pop(mergeDownload);
+  });
 })();
 </script>
 

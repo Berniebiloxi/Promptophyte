@@ -50,6 +50,9 @@ Either way:
    top.
 3. **Answer its questions.** With the full meta-prompt you can reply
    "accept defaults" at any step.
+4. **When it's built and running,**
+   [Publishing Your Project](publishing-your-project.md) shows how to put
+   it somewhere a friend can open a link.
 
 ## Which AI tool should I use?
 
@@ -107,11 +110,12 @@ working — go take the next step.
 ## What's in here
 
 ```
-quickstart.md          The short prompt — fastest path to something running.
-meta-prompt.md         The full reusable prompt. The complete interview.
-setup-claude-code.md   How to install and start Claude Code, from scratch.
-handbook/level-1.md     The full beginner walkthrough.
-handbook/level-2.md     A deeper-dive glossary for terms that come up.
+quickstart.md               The short prompt — fastest path to something running.
+meta-prompt.md              The full reusable prompt. The complete interview.
+setup-claude-code.md        How to install and start Claude Code, from scratch.
+publishing-your-project.md  Once it runs on your computer, how to give a friend a link.
+handbook/level-1.md         The full beginner walkthrough.
+handbook/level-2.md         A deeper-dive glossary for terms that come up.
 ```
 
 ## Feedback and questions
