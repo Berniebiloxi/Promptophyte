@@ -202,12 +202,14 @@ automated steps that happens (check the code, run tests, deploy). A
 the real app where changes get tried out first. **Production** is the
 real one, the one actually being used.
 
-**Why this comes up:** Category 9 asks whether you want this kind of
-safety net at all, and how automatic it should be. A small household
-app often skips it entirely for now — changes just get pulled and run
-manually, the equivalent of an owner personally checking something
-before it's used again rather than running a formal inspection
-program.
+**Why this comes up:** For a growing app, Category 9 asks about this in
+full — how automatic it should be, and whether changes pass through a
+staging copy first. A small household app trims that down to two
+simpler questions instead (where does the finished app actually run,
+and how does a bad change get undone) and skips staging environments
+and automatic deploys entirely — the equivalent of an owner personally
+checking something before it's used again rather than running a formal
+inspection program.
 
 ---
 
@@ -276,10 +278,15 @@ exactly what it sounds like — reverting to an earlier, known-good
 version, the same way you'd restore a previous floor plan if a
 renovation turned out to be a mistake.
 
-**Why this comes up:** This is what makes "nothing is ever truly lost"
-from Level 1 actually true in practice — and it's why the standing
-guardrail about never committing (permanently saving) without telling
-you first matters: a commit becomes part of that permanent history.
+**Why this comes up:** Category 3 asks this directly, for every
+project size, right down to a weekend prototype: does the project live
+as just a folder, a folder with this kind of saved history kept
+locally, or that plus a copy on a hosting service like GitHub so it
+survives your computer dying? That's what makes "nothing is ever truly
+lost" from Level 1 actually true in practice — and it's why the
+standing guardrail about never committing (permanently saving) without
+telling you first matters: a commit becomes part of that permanent
+history.
 
 ---
 
