@@ -80,7 +80,7 @@ memorize this; come back to it whenever a term trips you up. (For a
 deeper dive on several of these — repository, commit, and more — see
 Level 2. And once you actually start the interview, the AI will keep
 building a personalized glossary of every term specific to *your*
-project — more on that in Part 6.)
+project — more on that in Part 5.)
 
 - **File** — a single document on a computer (a photo, a text
   document, a piece of code). You already know this one.
@@ -144,32 +144,45 @@ It's built around three ideas that matter enough to say up front:
 
 Here's the literal, step-by-step version:
 
-1. **Open whichever AI coding tool you're using** — this could be
-   Claude Code, or even just a plain chat conversation with Claude,
-   depending on what you have access to. Any of them work; the
-   meta-prompt itself does the heavy lifting.
+1. **Open whichever AI coding tool you're using** — Claude Code,
+   Gemini CLI, Codex, Cursor, or even just a plain chat conversation
+   with Claude or ChatGPT with no file access at all. Any of them
+   work; the meta-prompt itself does the heavy lifting. If you're in a
+   plain chat window with no file access, the prompt is instructed to
+   say so immediately — the interview still works exactly the same,
+   you'll just be copying each finished file out yourself and pasting
+   it back in at the start of your next session, rather than it
+   loading automatically.
 2. **You'll fill in one sentence** describing your idea, right at the
    top of the prompt, in your own words. No jargon required — "an app
    where my roommate and I can both check off items on a shared
    grocery list" is a completely sufficient sentence.
-3. **First, it checks whether you'd be reinventing the wheel.** Before
-   anything else, the AI does a quick search for existing free or
-   open-source projects that already do roughly what you described,
-   and gives you a plain-language summary: what's out there, how close
-   a fit it looks, and what real gap (if any) is still left. It'll
-   then ask you directly whether you'd rather adapt something that
-   already exists or still build this yourself. Building it yourself
+3. **First, it asks one question**: how much experience do you have
+   with this kind of thing? (More on this in Part 5 — it comes first
+   because it changes how everything else, including the next two
+   steps, gets framed.)
+4. **Then it checks whether you'd be reinventing the wheel.** The AI
+   does a quick search for existing free or open-source projects that
+   already do roughly what you described, and gives you a
+   plain-language summary: what's out there, how close a fit it looks,
+   and what real gap (if any) is still left. If you answered None or
+   Some in the last step, it frames the choice as using an existing
+   project as-is or building your own — *modifying* someone else's
+   code is real, harder work than either of those, so it's kept off
+   the table unless you said you're Experienced. Building it yourself
    is always a perfectly good answer, even when something close
    already exists — this step is just there so that's a choice you're
-   making on purpose, not by accident.
-4. **Then it asks one question**, always: how big is this project?
-   (More on this in Part 5 — it changes everything else.)
-5. **Then it asks one more question**: how much experience do you
-   have with this kind of thing? (More on this in Part 6 — it changes
-   how much explaining happens along the way.)
+   making on purpose, not by accident. (And if the tool you're using
+   can't search the web, it says so plainly and skips straight to the
+   next step, rather than guessing from memory.)
+5. **Then it asks one more question**, always: how big is this
+   project? (More on this in Part 6 — it changes everything else.)
 6. **Then it interviews you**, one or two topics at a time, always
-   explaining *why* it's asking before it asks. You'll see something
-   like:
+   explaining *why* it's asking before it asks. Each round opens by
+   telling you where you are — "category 5 of the 13 that apply here;
+   the next two are about what happens when things break" — so you
+   always know roughly how much is left rather than wondering if it
+   ever ends. You'll see something like:
 
    > **PM 101:** Loading, empty, and error states are what a screen
    > shows while something's happening, when there's nothing to show
@@ -199,40 +212,16 @@ Here's the literal, step-by-step version:
 
 ---
 
-## Part 5: How Big Is This Thing?
+## Part 5: How Much Do You Already Know?
 
-Once the prior-art check is out of the way, you'll be asked to pick
-one of three sizes. This matters *enormously* — it decides how many
-of the questions in Part 7 actually get asked, so a weekend experiment
-doesn't get put through the same wringer as something meant to last
-years.
-
-- **Prototype/experiment** — "I just want to see if this idea even
-  works, and it's fine if I throw it away." Only a handful of the
-  most basic questions get asked. Fast, disposable, low-commitment.
-- **Small personal/self-hosted app** — "This is a real tool I'll
-  actually use, probably just me or a small group, running on
-  something I control." **This is TidyList.** Every category gets
-  asked, but the AI is instructed to keep the heavier-duty questions
-  (like automated deployment pipelines) at their lightest, simplest
-  version rather than the full enterprise treatment.
-- **Growing app** — "I expect this to have real, ongoing usage, or
-  grow substantially over time." Everything gets asked, in full, no
-  shortcuts.
-
-If it's not obvious which one fits, the prompt is instructed to just
-ask you rather than guess — so you never have to figure this out
-alone.
-
----
-
-## Part 6: How Much Do You Already Know?
-
-This is a separate question from Part 5, and it doesn't get asked
-about the *project* — it gets asked about *you*. It exists because
-"explain everything from scratch" is exactly right for some people and
-actively patronizing for others, and the meta-prompt has no way of
-knowing which one you are unless it asks.
+This is the very first question you're actually asked — before even
+the prior-art check — and it doesn't get asked about the *project*, it
+gets asked about *you*. It comes first because it changes how
+everything that follows gets framed, including the prior-art check and
+the size question (Part 6) right after it: "explain everything from
+scratch" is exactly right for some people and actively patronizing for
+others, and the meta-prompt has no way of knowing which one you are
+unless it asks.
 
 - **None** — "I've genuinely never done anything like this before."
   Every question gets a plain-language explanation first, the AI
@@ -253,11 +242,38 @@ strictly needed, which costs you nothing but a few extra sentences.
 
 ---
 
+## Part 6: How Big Is This Thing?
+
+Once your experience level is set and the prior-art check is done,
+you'll be asked to pick one of three sizes. This matters *enormously*
+— it decides how many of the questions in Part 7 actually get asked,
+so a weekend experiment doesn't get put through the same wringer as
+something meant to last years.
+
+- **Prototype/experiment** — "I just want to see if this idea even
+  works, and it's fine if I throw it away." Only a handful of the
+  most basic questions get asked. Fast, disposable, low-commitment.
+- **Small personal/self-hosted app** — "This is a real tool I'll
+  actually use, probably just me or a small group, running on
+  something I control." **This is TidyList.** Every category gets
+  asked, but the AI is instructed to keep the heavier-duty questions
+  (like automated deployment pipelines) at their lightest, simplest
+  version rather than the full enterprise treatment.
+- **Growing app** — "I expect this to have real, ongoing usage, or
+  grow substantially over time." Everything gets asked, in full, no
+  shortcuts.
+
+If it's not obvious which one fits, the prompt is instructed to just
+ask you rather than guess — so you never have to figure this out
+alone.
+
+---
+
 ## Part 7: The Interview, Category by Category
 
 Here's every topic you'll actually get asked about, explained in
 plain language, with what it might mean for TidyList specifically.
-You won't get every single one of these on every project — Part 5
+You won't get every single one of these on every project — Part 6
 decides which apply — but this is the full map.
 
 ### 1. Core Features & Scope
@@ -288,24 +304,43 @@ library), and it has to work well on both a phone and a laptop, since
 everyone using it will be checking it from their own device.
 
 ### 3. Architecture & Environment
-**The question:** How does this actually get built and run — is it a
-single file you just run directly, or something more involved? And if
-it's sharing a computer with other projects, how much of that
-computer's resources can it use? Also: what operating system does this
-actually need to run and be set up on — and is that the same computer
-the AI is coding on right now, or a different one?
-**Why it matters:** Source code by itself doesn't run — something
-always has to turn it into a working program, and that "something"
-should be chosen on purpose, not out of habit. And commands genuinely
-differ between operating systems — something Windows and something
-Mac/Linux each expect can look completely different (a Windows setup
-never uses `sudo`, for instance) — so this needs a real answer, not an
-assumption based on wherever the AI happens to be working.
-**For TidyList:** A single lightweight script, no complicated build
-process, running on a small home server. Everyone reaches it through
-an ordinary browser, so nobody's own computer needs its own setup step
-at all. *(If "single script vs. containers" doesn't quite make sense
-yet, Level 2 has a full breakdown of what a container actually is.)*
+**The question:** Where does the project itself live — just a folder
+on your computer, a folder with a saved history of every change so
+anything can be undone, or that plus a copy on a hosting service like
+GitHub so it survives your computer dying? Does this need to run for
+free, or is a small monthly cost okay? How does this actually get
+built and run — is it a single file you just run directly, or
+something more involved? And if it's sharing a computer with other
+projects, how much of that computer's resources can it use? Also: what
+operating system does this actually need to run and be set up on — and
+is that the same computer the AI is coding on right now, or a
+different one?
+**Why it matters:** The "where does it live" question gets asked even
+for a throwaway prototype, because the saved-history option is free
+insurance the AI sets up and manages entirely on its own, and it's
+what makes the automated checks and deployment covered in categories 9
+and 13 possible later — every later mention of "the repo" or "GitHub"
+in the interview means whatever you picked here. The cost question
+matters because "free" genuinely rules some hosting and database
+choices out — from here on, the AI is expected to say plainly whenever
+a recommended option would actually cost money, rather than letting a
+paid service arrive as the default. And source code by itself doesn't
+run — something always has to turn it into a working program, and that
+"something" should be chosen on purpose, not out of habit. Commands
+genuinely differ between operating systems too — something Windows and
+something Mac/Linux each expect can look completely different (a
+Windows setup never uses `sudo`, for instance) — so this needs a real
+answer, not an assumption based on wherever the AI happens to be
+working. Before recommending a stack at all, the AI is also instructed
+to check what's actually installed on your computer, so you don't find
+out three planning documents later that the database it picked isn't
+there.
+**For TidyList:** A folder with a saved history, plus a copy on
+GitHub. Free to run — a single lightweight script, no complicated
+build process, on a small home server. Everyone reaches it through an
+ordinary browser, so nobody's own computer needs its own setup step at
+all. *(If "single script vs. containers" doesn't quite make sense yet,
+Level 2 has a full breakdown of what a container actually is.)*
 
 ### 4. Performance & Data
 **The question:** If more than one person uses this, what happens when
@@ -423,10 +458,14 @@ they're not just mysterious files sitting in a folder:
   everything you decided: what the app does, what it deliberately
   doesn't do, and why. If you ever forget "wait, did we decide to add
   logins later or not?" — this is where you look.
-- **The root instructions file (CLAUDE.md)** — this one isn't really
+- **The root instructions file (AGENTS.md)** — this one isn't really
   for you, it's the AI's own rulebook for this specific project,
   written from everything you both decided. It's why the AI doesn't
-  "forget" your answers between conversations.
+  "forget" your answers between conversations. If you're using Claude
+  Code or Gemini CLI, you'll also see a tiny `CLAUDE.md` or `GEMINI.md`
+  sitting next to it — that's just a one-line pointer so your specific
+  tool finds the real instructions automatically; the actual content
+  only ever lives in the one file.
 - **The Module Index** — a running table of contents for the project
   itself, so the AI (or a completely fresh session) can find the right
   part of the code without having to re-read the whole thing every
@@ -444,7 +483,7 @@ they're not just mysterious files sitting in a folder:
   — it's a running answer to "what's done and what's left," instead of
   having to piece that together from memory of past recaps.
 - **The Glossary** *(only for the None or Some experience level from
-  Part 6)* — every term explained during your interview or build,
+  Part 5)* — every term explained during your interview or build,
   written down live, in your own words, as it came up. This becomes a
   personalized reference built from exactly the concepts that actually
   came up for your project — not a generic document written for a
@@ -506,6 +545,12 @@ of which house they're working on:
 - It never permanently saves a change, or deletes/resets anything,
   without telling you what it's about to do first and getting your
   go-ahead — even if the technical settings would otherwise allow it.
+  If you're at the None or Some experience level, that request also
+  has to actually make sense to you: what the action does, whether it
+  can be undone, and what happens if it goes wrong. Wherever there's a
+  safer version — backing something up before deleting it, say — it
+  offers that by default instead of asking you to judge the risk
+  yourself.
 
 If it ever tells you "no, not without checking with you first" — that's
 the system working exactly as intended, not something going wrong.
@@ -516,12 +561,13 @@ the system working exactly as intended, not something going wrong.
 
 - **You never write code.** Your job is deciding what and why.
 - **Paste the meta-prompt in, fill in one sentence about your idea.**
-- **First, it checks if something like this already exists** —
+- **First, it asks how much experience you have** — answer honestly;
+  "None" costs you nothing but a few extra sentences of explanation,
+  and it shapes everything that follows.
+- **Then it checks if something like this already exists** —
   building it yourself is still a fine answer even if it does.
-- **Answer the size question next** — it decides how much else gets
-  asked.
-- **Then it asks how much experience you have** — answer honestly;
-  "None" costs you nothing but a few extra sentences of explanation.
+- **Then it answers the size question** — it decides how much else
+  gets asked.
 - **Every question comes with a plain-language "why" before it's
   asked** — if it doesn't make sense, ask it to explain differently.
 - **You can say "you pick"** if you don't have a preference — the

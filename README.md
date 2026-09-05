@@ -27,11 +27,12 @@ process. You can move up to the full version later and hand it your
 half-built prototype.
 
 **Full way — [`meta-prompt.md`](meta-prompt.md).** The complete interview.
-It asks about scale, your experience level, and then works through the
-project a couple of topics at a time, producing a set of planning
-documents before it builds. Use this for anything you'll actually rely on.
+It asks about your experience level, checks for prior art, asks about
+scale, and then works through the project a couple of topics at a time,
+producing a set of planning documents before it builds. Use this for
+anything you'll actually rely on.
 
-> **Heads up: the full meta-prompt is long** — about 600 lines. That's
+> **Heads up: the full meta-prompt is long** — about 700 lines. That's
 > deliberate; every paragraph is there to stop the AI guessing about
 > something you'd care about. You don't read it yourself — you paste it and
 > answer what it asks — but if it feels like a lot to start with, use the
