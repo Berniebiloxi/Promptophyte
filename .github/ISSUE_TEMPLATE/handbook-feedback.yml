@@ -17,7 +17,8 @@ body:
       options:
         - Handbook — Level 1
         - Handbook — Level 2
-        - meta-prompt.md (the prompt itself)
+        - meta-prompt.md (the full prompt)
+        - quickstart.md (the short prompt)
         - README
         - Not sure / more than one
     validations:
