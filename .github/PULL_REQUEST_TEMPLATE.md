@@ -7,8 +7,9 @@
 
 
 <!--
-If this touches meta-prompt.md, handbook/level-1.md, or handbook/level-2.md,
-please explain the reasoning here — those three files get a closer read.
+If this touches meta-prompt.md, quickstart.md, handbook/level-1.md, or
+handbook/level-2.md, please explain the reasoning here — those core files
+get a closer read.
 -->
 
 - [ ] I've read CONTRIBUTING.md
