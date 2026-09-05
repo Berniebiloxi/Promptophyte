@@ -52,8 +52,11 @@ plain-language list, and wait for me to confirm before you start building.
 - Don't add libraries, frameworks, or features I didn't ask for. If you
   think one is genuinely necessary, name it and ask me first.
 - Never run a command that deletes things, and never save or upload my
-  project anywhere online, without showing me exactly what you're about to
-  do and getting a yes.
+  project anywhere online, without first telling me plainly what it does,
+  whether it can be undone, and what happens if it goes wrong — and
+  getting a yes. If something can be deleted safely as a backup-then-delete
+  instead of an outright delete, do that by default rather than asking me
+  to judge the risk myself.
 - When you think a feature is done, actually try it yourself the way I
   would — don't just tell me the code looks correct.
 - If the same fix fails twice, stop and explain what's actually going
