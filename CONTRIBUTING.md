@@ -24,11 +24,12 @@ telling us where it lost you.
 - One change per pull request where you can — it keeps things moving.
 - Be kind in issues and reviews. Everyone here is learning something.
 
-## About the three core files
+## About the core files
 
-`meta-prompt.md`, `handbook/level-1.md`, and `handbook/level-2.md` are the
-heart of the project. Changes to them are very welcome, but they get a
-closer read than other files — explain *why* in your pull request so the
-reasoning is on the record.
+`meta-prompt.md`, `quickstart.md`, `handbook/level-1.md`, and
+`handbook/level-2.md` are the heart of the project. Changes to them are
+very welcome, but they get a closer read than other files — explain *why*
+in your pull request so the reasoning is on the record.
 
-That's it. No checklist to sign, no template to fill out. Open the issue.
+That's it. Opening a pull request will hand you a short template to fill
+out — it's just a prompt, not a checklist to sign.
