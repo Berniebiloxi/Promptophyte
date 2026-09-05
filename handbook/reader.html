@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Promptophyte — Handbook</title>
-<meta name="description" content="The Promptophyte handbook — a ground-up guide to building software with an AI.">
+<meta name="description" content="The Promptophyte handbook and guides — a ground-up guide to building software with an AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@
   .mark:hover svg{ transform: rotate(-8deg) scale(1.12); }
   .mark span{ font-family: 'Newsreader', Georgia, serif; font-size: 18px; font-weight: 500; color: var(--ink); }
 
-  .tabs{ display: flex; gap: 10px; }
+  .tabs{ display: flex; flex-wrap: wrap; gap: 10px; }
   .tab{
     font: inherit; font-size: 14.5px; font-weight: 600;
     padding: 10px 16px; border-radius: 16px; border: none;
@@ -163,10 +163,7 @@
       </svg>
       <span>Promptophyte</span>
     </a>
-    <div class="tabs">
-      <button class="tab" id="tab-1" data-doc="level-1">Level 1</button>
-      <button class="tab" id="tab-2" data-doc="level-2">Level 2</button>
-    </div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Guides"></div>
   </div>
 
   <div class="doc" id="doc">
@@ -182,49 +179,97 @@
 
 <script>
 (function(){
-  var docEl = document.getElementById('doc');
-  var tabs = { 'level-1': document.getElementById('tab-1'), 'level-2': document.getElementById('tab-2') };
+  var REPO = 'https://github.com/Berniebiloxi/Promptophyte';
 
-  function setActive(doc){
-    Object.keys(tabs).forEach(function(k){ tabs[k].classList.toggle('active', k === doc); });
+  // Every document this reader can show. `path` is relative to this file
+  // (handbook/reader.html), so root-level guides start with "../". To add a
+  // guide, add a row here — the tabs, fetching, and link rewriting all key
+  // off this list.
+  var DOCS = [
+    { id: 'level-1',                 label: 'Level 1',           path: 'level-1.md',                    title: 'Handbook (Level 1)' },
+    { id: 'level-2',                 label: 'Level 2',           path: 'level-2.md',                    title: 'Handbook (Level 2)' },
+    { id: 'setup-claude-code',       label: 'Claude Code setup', path: '../setup-claude-code.md',       title: 'Setting up Claude Code' },
+    { id: 'publishing-your-project', label: 'Publishing',        path: '../publishing-your-project.md', title: 'Publishing Your Project' }
+  ];
+
+  var docEl = document.getElementById('doc');
+  var tabsEl = document.getElementById('tabs');
+
+  // Collapse "." and ".." segments so paths can be compared.
+  function normalize(p){
+    var out = [];
+    p.split('/').forEach(function(seg){
+      if (seg === '' || seg === '.') return;
+      if (seg === '..'){ if (out.length && out[out.length - 1] !== '..') out.pop(); else out.push('..'); }
+      else out.push(seg);
+    });
+    return out.join('/');
   }
 
-  function rewriteInternalLinks(container){
-    var links = container.querySelectorAll('a[href]');
-    links.forEach(function(a){
-      var href = a.getAttribute('href');
-      if (/level-1\.md(#.*)?$/.test(href)){
-        a.setAttribute('href', 'reader.html?doc=level-1');
-      } else if (/level-2\.md(#.*)?$/.test(href)){
-        a.setAttribute('href', 'reader.html?doc=level-2');
-      }
+  var byId = {};
+  var byRepoPath = {};
+  DOCS.forEach(function(d){
+    d.repoPath = normalize('handbook/' + d.path);   // e.g. "handbook/level-1.md" or "setup-claude-code.md"
+    byId[d.id] = d;
+    byRepoPath[d.repoPath] = d;
+  });
+
+  function setActive(id){
+    DOCS.forEach(function(d){
+      d.tab.classList.toggle('active', d.id === id);
+      d.tab.setAttribute('aria-selected', d.id === id ? 'true' : 'false');
     });
   }
 
-  function load(doc){
-    if (doc !== 'level-1' && doc !== 'level-2') doc = 'level-1';
-    setActive(doc);
+  // Relative links inside a document are written to work on GitHub, where the
+  // file lives at REPO/blob/main/<repoPath>. Resolve them exactly the way
+  // GitHub would, then: links to another registered guide open in this
+  // reader; everything else goes to GitHub at its resolved location.
+  var blobPrefix = new RegExp('^' + REPO.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/blob/main/([^#]+)(#.*)?$');
+  function rewriteLinks(container, doc){
+    var docUrl = REPO + '/blob/main/' + doc.repoPath;
+    container.querySelectorAll('a[href]').forEach(function(a){
+      var href = a.getAttribute('href');
+      if (!href || /^(#|[a-z][a-z0-9+.-]*:)/i.test(href)) return;   // in-page anchors and absolute URLs stay as-is
+      var abs;
+      try { abs = new URL(href, docUrl).href; } catch (e){ return; }
+      var m = abs.match(blobPrefix);
+      var target = m && byRepoPath[normalize(m[1])];
+      a.setAttribute('href', target ? 'reader.html?doc=' + target.id + (m[2] || '') : abs);
+    });
+  }
+
+  function load(id){
+    var d = byId[id] || DOCS[0];
+    setActive(d.id);
     docEl.classList.add('loading');
-    fetch(doc + '.md')
+    fetch(d.path)
       .then(function(res){ if (!res.ok) throw new Error('fetch failed'); return res.text(); })
       .then(function(md){
         docEl.innerHTML = marked.parse(md);
-        rewriteInternalLinks(docEl);
+        rewriteLinks(docEl, d);
         docEl.classList.remove('loading');
-        document.title = 'Promptophyte — Handbook (' + (doc === 'level-1' ? 'Level 1' : 'Level 2') + ')';
+        document.title = 'Promptophyte — ' + d.title;
       })
       .catch(function(){
-        docEl.innerHTML = '<div class="error-box"><p>Couldn\u2019t load this page right now.</p>' +
-          '<p><a href="' + doc + '.md">Open the raw file on GitHub instead</a>.</p></div>';
+        docEl.innerHTML = '<div class="error-box"><p>Couldn’t load this page right now.</p>' +
+          '<p><a href="' + REPO + '/blob/main/' + d.repoPath + '">Open it on GitHub instead</a>.</p></div>';
         docEl.classList.remove('loading');
       });
   }
 
-  Object.keys(tabs).forEach(function(k){
-    tabs[k].addEventListener('click', function(){
-      history.pushState(null, '', 'reader.html?doc=' + k);
-      load(k);
+  DOCS.forEach(function(d){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tab';
+    b.setAttribute('role', 'tab');
+    b.textContent = d.label;
+    b.addEventListener('click', function(){
+      history.pushState(null, '', 'reader.html?doc=' + d.id);
+      load(d.id);
     });
+    tabsEl.appendChild(b);
+    d.tab = b;
   });
 
   window.addEventListener('popstate', function(){
